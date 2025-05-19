@@ -19,6 +19,7 @@ int main() {
             std::cout << "4. Skaityti duomenis iš failo" << std::endl;
             std::cout << "5. Baigti" << std::endl;
             std::cout << "6. Generuoti testinius failus" << std::endl;
+             std::cout << "7. Analizuoti pasirinktą sugeneruotą failą" << std::endl;
 
             std::cin >> pasirinkimas;
             if (std::cin.fail()) throw std::runtime_error("Neteisingas įvesties formatas.");
@@ -54,6 +55,9 @@ int main() {
                     break;
                 case 6:
                     generuotiPasirinktaFaila();
+                    break;
+                case 7:
+                    analizuotiPasirinktaFaila();
                     break;
                 default:
                     std::cout << "Neteisingas pasirinkimas. Bandykite dar kartą." << std::endl;

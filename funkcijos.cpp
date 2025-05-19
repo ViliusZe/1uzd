@@ -461,4 +461,92 @@ void generuotiPasirinktaFaila() {
             std::cout << "Neteisingas pasirinkimas.\n";
     }
 }
+void analizuotiPasirinktaFaila() {
+    int pasirinkimas;
+    std::string failas;
 
+    std::cout << "Pasirinkite, kurį failą analizuoti:\n";
+    std::cout << "1 - studentai_1k.txt\n";
+    std::cout << "2 - studentai_10k.txt\n";
+    std::cout << "3 - studentai_100k.txt\n";
+    std::cout << "4 - studentai_1mln.txt\n";
+    std::cout << "5 - studentai_10mln.txt\n";
+    std::cin >> pasirinkimas;
+
+    if (std::cin.fail()) {
+        std::cerr << "Klaida: įvestas ne skaičius.\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return;
+    }
+
+    switch (pasirinkimas) {
+        case 1: failas = "studentai_1k.txt"; break;
+        case 2: failas = "studentai_10k.txt"; break;
+        case 3: failas = "studentai_100k.txt"; break;
+        case 4: failas = "studentai_1mln.txt"; break;
+        case 5: failas = "studentai_10mln.txt"; break;
+        default:
+            std::cout << "Neteisingas pasirinkimas.\n";
+            return;
+    }
+
+    analizuotiFaila(failas);
+}
+
+
+void analizuotiFaila(const std::string& failoVardas) {
+    std::ifstream in(failoVardas);
+    if (!in) {
+        std::cerr << "Nepavyko atidaryti failo: " << failoVardas << std::endl;
+        return;
+    }
+
+    std::string eilute;
+    getline(in, eilute); // praleidžiam antraštę
+
+    std::vector<duomenys> kietiakiai;
+    std::vector<duomenys> vargsiukai;
+
+    while (getline(in, eilute)) {
+        std::stringstream ss(eilute);
+        duomenys s;
+        ss >> s.v >> s.p;
+
+        int pazymys;
+        while (ss >> pazymys) {
+            s.N.push_back(pazymys);
+        }
+
+        if (s.N.empty()) continue;
+
+        s.e = s.N.back();         // paskutinis – egzaminas
+        s.N.pop_back();           // likę – namų darbai
+        s.paz = s.N.size();
+
+        double vid = 0.0;
+        for (int n : s.N) vid += n;
+        vid = s.N.empty() ? 0 : vid / s.N.size();
+        s.r = 0.4 * vid + 0.6 * s.e;
+
+        if (s.r < 5.0)
+            vargsiukai.push_back(s);
+        else
+            kietiakiai.push_back(s);
+    }
+    in.close();
+
+    std::ofstream out1("vargsiukai.txt");
+    std::ofstream out2("kietiakiai.txt");
+
+    for (const auto& s : vargsiukai)
+        out1 << s.p << " " << s.v << " " << s.r << "\n";
+
+    for (const auto& s : kietiakiai)
+        out2 << s.p << " " << s.v << " " << s.r << "\n";
+
+    out1.close();
+    out2.close();
+
+    std::cout << "Analizė baigta: " << vargsiukai.size() << " vargšiukai, " << kietiakiai.size() << " kietiakiai.\n";
+}

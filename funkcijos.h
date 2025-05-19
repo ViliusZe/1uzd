@@ -30,5 +30,8 @@ void skaitymasIsFailo(vector<duomenys>& M, const string& failoPavadinimas);
 void rasymasIFaila(const vector<duomenys>& M);
 void generuotiFaila(const std::string& failoVardas, int kiekis);
 void generuotiPasirinktaFaila();
+void analizuotiFaila(const std::string& failoVardas);
+void analizuotiPasirinktaFaila();
+
 
 #endif
