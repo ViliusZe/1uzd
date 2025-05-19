@@ -87,62 +87,76 @@ bool noriTęsti()
 }
 
 // Funkcija skaityti ir įvesti mokinių duomenis.
-void skaitymas(vector<duomenys>& M) 
-{
-    do 
-    {
-        duomenys temp;  // Laikinas studento duomenų objektas.
-        do 
-        {
+void skaitymas(vector<duomenys>& M) {
+    do {
+        duomenys temp;
+
+        // Vardo įvedimas su tikrinimu
+        do {
             cout << "Įveskite mokinio vardą: ";
-            cin >> temp.v;
-            if (!tikrintiVardaPavarde(temp.v)) // Tikrinama, ar vardas yra teisingas.
-            {  
-                cout << "Neteisingas vardas. Bandykite dar kartą.\n";
+            try {
+                cin >> temp.v;
+                if (!tikrintiVardaPavarde(temp.v)) throw std::invalid_argument("Varde turi būti tik raidės.");
+            } catch (const std::exception& e) {
+                cout << "Klaida: " << e.what() << " Bandykite dar kartą.\n";
+                continue;
             }
-        } 
-        while (!tikrintiVardaPavarde(temp.v));  // Pakartojama, kol įvestas teisingas vardas.
-        do 
-        {
+            break;
+        } while (true);
+
+        // Pavardės įvedimas su tikrinimu
+        do {
             cout << "Įveskite mokinio pavardę: ";
-            cin >> temp.p;
-            if (!tikrintiVardaPavarde(temp.p)) // Tikrinama, ar pavardė yra teisinga.
-            {  
-                cout << "Neteisinga pavardė. Bandykite dar kartą.\n";
+            try {
+                cin >> temp.p;
+                if (!tikrintiVardaPavarde(temp.p)) throw std::invalid_argument("Pavardėje turi būti tik raidės.");
+            } catch (const std::exception& e) {
+                cout << "Klaida: " << e.what() << " Bandykite dar kartą.\n";
+                continue;
             }
-        } 
-        while (!tikrintiVardaPavarde(temp.p));  // Pakartojama, kol įvestas teisingas pavardė.
+            break;
+        } while (true);
+
+        // Pažymių įvedimas
         cout << "Įveskite mokinio pažymius (baigti įveskite -1): ";
         temp.paz = 0;
         int pazymys;
-        while (true) 
-        {
-            cin >> pazymys;
-            if (pazymys == -1) break;  // Baigti įvedimą, jei įvestas -1.
-            if (pazymys < 1 || pazymys > 10) // Tikrinama, ar pažymiai yra tarp 1 ir 10.
-            {  
-                cout << "Pažymys turi būti tarp 1 ir 10. Bandykite dar kartą: ";
+        while (true) {
+            try {
+                cin >> pazymys;
+                if (cin.fail()) throw std::runtime_error("Turite įvesti sveikąjį skaičių.");
+                if (pazymys == -1) break;
+                if (pazymys < 1 || pazymys > 10) throw std::out_of_range("Pažymys turi būti tarp 1 ir 10.");
+                temp.N.push_back(pazymys);
+                temp.paz++;
+            } catch (const std::exception& e) {
+                cout << "Klaida: " << e.what() << " Bandykite dar kartą: ";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+        }
+
+        // Egzamino rezultato įvedimas
+        do {
+            cout << "Įveskite mokinio egzamino rezultatą (1-10): ";
+            try {
+                cin >> temp.e;
+                if (cin.fail()) throw std::runtime_error("Turite įvesti sveikąjį skaičių.");
+                if (temp.e < 1 || temp.e > 10) throw std::out_of_range("Egzamino rezultatas turi būti nuo 1 iki 10.");
+            } catch (const std::exception& e) {
+                cout << "Klaida: " << e.what() << " Bandykite dar kartą.\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 continue;
             }
-            temp.N.push_back(pazymys);  // Pridedama pažymį į studento vektorių.
-            temp.paz++;  // Didinamas pažymių skaičius.
-        }
-        do 
-        {
-            cout << "Įveskite mokinio egzamino rezultatą (1-10): ";
-            cin >> temp.e;
-            if (cin.fail() || temp.e < 1 || temp.e > 10) 
-            {  // Tikrinama, ar egzaminų rezultatas yra teisingas.
-                cout << "Egzamino rezultatas turi būti tarp 1 ir 10. Bandykite dar kartą.\n";
-                cin.clear();  // Valoma klaidos būsena.
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Ignoruojami papildomi simboliai.
-            }
-        } 
-        while (temp.e < 1 || temp.e > 10);  // Pakartojama, kol įvestas teisingas egzaminų rezultatas.
-        M.push_back(temp);  // Įrašomas studento duomenys į vektorių.
-    } 
-    while (noriTęsti());  // Klausimas, ar norima įvesti dar vieną mokinį.
+            break;
+        } while (true);
+
+        M.push_back(temp);
+
+    } while (noriTęsti());
 }
+
 
 // Funkcija apskaičiuoti galutinius rezultatus remiantis pasirinktu metodiku.
 void rikiuotiMokinius(vector<duomenys>& M, int pasirinkimas, bool atvirkstine)
@@ -326,11 +340,11 @@ void generuotiPazymius(vector<duomenys>& M)
 void skaitymasIsFailo(vector<duomenys>& M, const string& failoPavadinimas) {
     ifstream failas(failoPavadinimas);
     if (!failas) {
-        cout << "Nepavyko atidaryti failo!" << endl;
-        return;
+        throw std::runtime_error("Nepavyko atidaryti failo: " + failoPavadinimas);
     }
+
     string eilute;
-    getline(failas, eilute);  // Praleidžiame pirmą eilutę (antraštę)
+    getline(failas, eilute); // praleidžiama antraštė
 
     while (getline(failas, eilute)) {
         stringstream ss(eilute);
@@ -352,6 +366,7 @@ void skaitymasIsFailo(vector<duomenys>& M, const string& failoPavadinimas) {
     }
     failas.close();
 }
+
 // Funkcija rašyti duomenis į failą
 void rasymasIFaila(const vector<duomenys>& M) 
 {
