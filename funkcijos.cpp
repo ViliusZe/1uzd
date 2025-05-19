@@ -424,11 +424,41 @@ void generuotiFaila(const std::string& failoVardas, int kiekis) {
     out.close();
     std::cout << "Sugeneruotas failas: " << failoVardas << " (" << kiekis << " įrašų)\n";
 }
+void generuotiPasirinktaFaila() {
+    int pasirinkimas;
+    std::cout << "Pasirinkite, kiek įrašų turės sugeneruotas failas:\n";
+    std::cout << "1 - 1 000 studentų\n";
+    std::cout << "2 - 10 000 studentų\n";
+    std::cout << "3 - 100 000 studentų\n";
+    std::cout << "4 - 1 000 000 studentų\n";
+    std::cout << "5 - 10 000 000 studentų\n";
+    std::cin >> pasirinkimas;
 
-void generuotiVisusFailus() {
-    generuotiFaila("studentai_1k.txt",      1000);
-    generuotiFaila("studentai_10k.txt",     10000);
-    generuotiFaila("studentai_100k.txt",    100000);
-    generuotiFaila("studentai_1mln.txt",    1000000);
-    generuotiFaila("studentai_10mln.txt",   10000000);
+    if (std::cin.fail()) {
+        std::cerr << "Klaida: įvestas ne skaičius.\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return;
+    }
+
+    switch (pasirinkimas) {
+        case 1:
+            generuotiFaila("studentai_1k.txt", 1000);
+            break;
+        case 2:
+            generuotiFaila("studentai_10k.txt", 10000);
+            break;
+        case 3:
+            generuotiFaila("studentai_100k.txt", 100000);
+            break;
+        case 4:
+            generuotiFaila("studentai_1mln.txt", 1000000);
+            break;
+        case 5:
+            generuotiFaila("studentai_10mln.txt", 10000000);
+            break;
+        default:
+            std::cout << "Neteisingas pasirinkimas.\n";
+    }
 }
+

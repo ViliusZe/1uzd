@@ -29,6 +29,6 @@ void generuotiPazymius(vector<duomenys>& M);
 void skaitymasIsFailo(vector<duomenys>& M, const string& failoPavadinimas);
 void rasymasIFaila(const vector<duomenys>& M);
 void generuotiFaila(const std::string& failoVardas, int kiekis);
-void generuotiVisusFailus();
+void generuotiPasirinktaFaila();
 
 #endif

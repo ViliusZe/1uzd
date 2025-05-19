@@ -53,7 +53,7 @@ int main() {
                     std::cout << "Programos pabaiga." << std::endl;
                     break;
                 case 6:
-                    generuotiVisusFailus();
+                    generuotiPasirinktaFaila();
                     break;
                 default:
                     std::cout << "Neteisingas pasirinkimas. Bandykite dar kartą." << std::endl;
