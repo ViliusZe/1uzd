@@ -19,8 +19,8 @@ int main() {
             std::cout << "4. Skaityti duomenis iš failo" << std::endl;
             std::cout << "5. Baigti" << std::endl;
             std::cout << "6. Generuoti testinius failus" << std::endl;
-             std::cout << "7. Analizuoti pasirinktą sugeneruotą failą" << std::endl;
-
+            std::cout << "7. Analizuoti pasirinktą sugeneruotą failą" << std::endl;
+            std::cout << "8. Atlikti analizės tyrimą (pasirinkti 1 arba 2)" << std::endl;
             std::cin >> pasirinkimas;
             if (std::cin.fail()) throw std::runtime_error("Neteisingas įvesties formatas.");
             M.clear();
@@ -58,6 +58,9 @@ int main() {
                     break;
                 case 7:
                     analizuotiPasirinktaFaila();
+                    break;
+                case 8:
+                    atliktiAnalize();
                     break;
                 default:
                     std::cout << "Neteisingas pasirinkimas. Bandykite dar kartą." << std::endl;

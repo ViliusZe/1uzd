@@ -7,6 +7,8 @@
 #include <sstream>
 #include <fstream>
 #include <limits>
+#include <chrono>
+using namespace std::chrono;
 
 #include "funkcijos.h"
 
@@ -495,18 +497,22 @@ void analizuotiPasirinktaFaila() {
 }
 
 
-void analizuotiFaila(const std::string& failoVardas) {
+long long analizuotiFaila(const std::string& failoVardas) {
+    auto pradzia = std::chrono::high_resolution_clock::now();
+
     std::ifstream in(failoVardas);
     if (!in) {
         std::cerr << "Nepavyko atidaryti failo: " << failoVardas << std::endl;
-        return;
+        return -1;
     }
 
     std::string eilute;
-    getline(in, eilute); // praleidžiam antraštę
+    getline(in, eilute); // antraštė
 
     std::vector<duomenys> kietiakiai;
     std::vector<duomenys> vargsiukai;
+
+    auto nuskaitymas_start = std::chrono::high_resolution_clock::now();
 
     while (getline(in, eilute)) {
         std::stringstream ss(eilute);
@@ -520,8 +526,8 @@ void analizuotiFaila(const std::string& failoVardas) {
 
         if (s.N.empty()) continue;
 
-        s.e = s.N.back();         // paskutinis – egzaminas
-        s.N.pop_back();           // likę – namų darbai
+        s.e = s.N.back();
+        s.N.pop_back();
         s.paz = s.N.size();
 
         double vid = 0.0;
@@ -536,17 +542,79 @@ void analizuotiFaila(const std::string& failoVardas) {
     }
     in.close();
 
+    auto nuskaitymas_end = std::chrono::high_resolution_clock::now();
+
+    auto isvedimas_start = std::chrono::high_resolution_clock::now();
+
     std::ofstream out1("vargsiukai.txt");
     std::ofstream out2("kietiakiai.txt");
 
     for (const auto& s : vargsiukai)
         out1 << s.p << " " << s.v << " " << s.r << "\n";
-
     for (const auto& s : kietiakiai)
         out2 << s.p << " " << s.v << " " << s.r << "\n";
 
     out1.close();
     out2.close();
 
+    auto isvedimas_end = std::chrono::high_resolution_clock::now();
+    auto pabaiga = std::chrono::high_resolution_clock::now();
+
+    // Laiko skaičiavimai (milisekundėmis)
+    auto t_nuskaitymas = std::chrono::duration_cast<std::chrono::milliseconds>(nuskaitymas_end - nuskaitymas_start).count();
+    auto t_isvedimas   = std::chrono::duration_cast<std::chrono::milliseconds>(isvedimas_end - isvedimas_start).count();
+    auto t_visas       = std::chrono::duration_cast<std::chrono::milliseconds>(pabaiga - pradzia).count();
+
     std::cout << "Analizė baigta: " << vargsiukai.size() << " vargšiukai, " << kietiakiai.size() << " kietiakiai.\n";
+    std::cout << "---- Laiko analizė ----\n";
+    std::cout << "Failo nuskaitymas + skirstymas: " << t_nuskaitymas << " ms\n";
+    std::cout << "Išvedimas į failus: " << t_isvedimas << " ms\n";
+    std::cout << "Bendras analizės laikas: " << t_visas / 1000.0 << " s\n";
+    std::cout << "------------------------\n";
+
+    return t_visas;
 }
+
+void atliktiAnalize() {
+    int tyrimas;
+    std::cout << "Pasirinkite tyrimo tipą:\n";
+    std::cout << "1 - Failo kūrimo greitis (be analizės)\n";
+    std::cout << "2 - Pilna analizė: nuskaitymas, rūšiavimas, išvedimas\n";
+    std::cin >> tyrimas;
+
+    if (std::cin.fail() || (tyrimas != 1 && tyrimas != 2)) {
+        std::cerr << "Klaida: įveskite 1 arba 2.\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return;
+    }
+
+    std::vector<std::pair<std::string, int>> failai = {
+        {"studentai_1k.txt", 1000},
+        {"studentai_10k.txt", 10000},
+        {"studentai_100k.txt", 100000},
+        {"studentai_1mln.txt", 1000000},
+        {"studentai_10mln.txt", 10000000}
+    };
+
+    for (const auto& [failas, kiekis] : failai) {
+        std::cout << "\nFailas: " << failas << "\n";
+
+        if (tyrimas == 1) {
+            auto start = std::chrono::high_resolution_clock::now();
+            generuotiFaila(failas, kiekis);
+            auto end = std::chrono::high_resolution_clock::now();
+            
+            auto laikasMs = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+            std::cout << "Sukūrimo laikas: " << laikasMs << " ms (" << laikasMs / 1000.0 << " s)\n";
+
+        } else if (tyrimas == 2) {
+            long long trukme = analizuotiFaila(failas);
+            if (trukme >= 0)
+            std::cout << "Apdorota per: " << trukme / 1000.0 << " s\n";
+        }
+        }
+    std::cout << "\nTyrimas baigtas.\n";
+}
+
+
