@@ -38,6 +38,15 @@ void atliktiAnalize();
 void testuotiVector(const std::string& failas);
 void testuotiList(const std::string& failas);
 void testuotiDeque(const std::string& failas);
+void atliktiAnalizeStrategija2();
+void testuotiStrategija2Vector(const std::string& failas);
+void testuotiStrategija2List(const std::string& failas);
+void testuotiStrategija2Deque(const std::string& failas);
+void atliktiAnalizeStrategija3();
+void testuotiStrategija3Vector(const std::string& failas);
+void testuotiStrategija3List(const std::string& failas);
+void testuotiStrategija3Deque(const std::string& failas);
+
 
 
 

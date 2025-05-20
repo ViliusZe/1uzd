@@ -392,8 +392,7 @@ void rasymasIFaila(const vector<duomenys>& M)
     cout << "Duomenys išrašyti į failą: " << "rezultatai.txt" << endl;
 }
 // Funkcija klausia vartotojo, ar norima rūšiuoti rezultatus
-#include <random>
-#include <fstream>
+
 
 void generuotiFaila(const std::string& failoVardas, int kiekis) {
     std::ofstream out(failoVardas);
@@ -618,3 +617,30 @@ void atliktiAnalize() {
         }
     std::cout << "\nTyrimas baigtas.\n";
 }
+
+void atliktiAnalizeStrategija2() {
+    std::vector<std::string> failai = {
+        "studentai_1k.txt", "studentai_10k.txt", "studentai_100k.txt",
+        "studentai_1mln.txt", "studentai_10mln.txt"
+    };
+
+    for (const auto& failas : failai) {
+        testuotiStrategija2Vector(failas);
+        testuotiStrategija2List(failas);
+        testuotiStrategija2Deque(failas);
+    }
+}
+void atliktiAnalizeStrategija3() {
+    std::vector<std::string> failai = {
+        "studentai_1k.txt", "studentai_10k.txt", "studentai_100k.txt",
+        "studentai_1mln.txt", "studentai_10mln.txt"
+    };
+
+    for (const auto& failas : failai) {
+        testuotiStrategija3Vector(failas);
+        testuotiStrategija3List(failas);
+        testuotiStrategija3Deque(failas);
+    }
+}
+
+
