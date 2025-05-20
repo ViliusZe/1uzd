@@ -281,7 +281,7 @@ Diskas: Samsung 980 Evo 1TB SSD
 * Pagrindiniai pakeitimai nuo pradinės v1.0 versijos:
 Studentų skirstymo į dvi kategorijas strategijų analizė:
 
-⚙ Įgyvendintos ir ištestuotos 3 skirstymo strategijos:
+ Įgyvendintos ir ištestuotos 3 skirstymo strategijos:
  1 strategija – Dviejų naujų konteinerių kūrimas:
 Kiekvienas studentas nukopijuojamas į atitinkamą naują konteinerį („vargšiukai“ arba „kietiakiai“).
 
