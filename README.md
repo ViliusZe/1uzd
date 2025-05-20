@@ -97,4 +97,38 @@
 
 
 3. Pasirinkite norimą analizės punktą (8 – Strategija 1, 10 – Strategija 2, 11 – Strategija 3)
+---
 
+## Diegimo instrukcija (naudojant CMake)
+
+### 1. Sukurkite `build` katalogą:
+
+```bash
+mkdir build
+cd build
+```
+
+### 2. Paleiskite `cmake`:
+
+```bash
+cmake ..
+```
+
+### 3. Sukompiliuokite programą:
+
+```bash
+cmake --build .
+```
+
+### 4. Paleiskite programą:
+
+```bash
+./StudentuAnalize     # Linux/Mac
+StudentuAnalize.exe   # Windows
+```
+
+> **Pastaba:** Įsitikinkite, kad `duomenys.txt` yra tame pačiame kataloge kaip vykdomasis `.exe`.
+
+## Autorius
+
+Vilius Zeigis
